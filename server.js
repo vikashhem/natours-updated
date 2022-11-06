@@ -8,16 +8,41 @@ process.on('uncaughtException', (err) => {
 });
 
 dotenv.config({ path: './config.env' });
-
 const app = require('./app');
 
-const DB = process.env.DB.replace('<PASSWORD>', process.env.DB_PSW);
+const DB = process.env.DATABASE.replace(
+  '<PASSWORD>',
+  process.env.DATABASE_PASSWORD
+);
 
-mongoose.connect(DB).then(() => console.log('DB connection successful!'));
+const connectDB = async () => {
+  await mongoose
+    .connect(DB, {
+      useNewUrlParser: true,
+      // useCreateIndex: true,
+      useUnifiedTopology: true,
+    })
+    .then(() => console.log('DB connection successful!'))
+    .catch(function (error) {
+      console.log(`Unable to connect to the Mongo db  ${error} `);
+    });
+  //...rest of code
+};
 
-const port = process.env.PORT || 8000;
+// use as a function
+connectDB();
+
+// mongoose
+//   .connect(DB, {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+//     useCreateIndex: true,
+//   })
+//   .then(() => console.log('DB connection successful!'));
+
+const port = process.env.PORT || 3000;
 const server = app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+  console.log(`App running on port ${port}...`);
 });
 
 process.on('unhandledRejection', (err) => {
@@ -29,8 +54,8 @@ process.on('unhandledRejection', (err) => {
 });
 
 process.on('SIGTERM', () => {
-  console.log('👋 SIGTERM RECEIVER. Shutting down gracefully');
+  console.log('👋SIGTERM RECEIVED. Shutting down gracefully ');
   server.close(() => {
-    console.log('💥 Process terminated!');
+    console.log('💥Process terminated');
   });
 });
