@@ -2,6 +2,7 @@
 
 Built using modern technologies: node.js, express, mongoDB, mongoose and friends 😊
 You can do the following actions on the Natours website:
+https://intense-reef-83348.herokuapp.com/tour/the-sea-explorer
 
 - log in and signup with email
 - upload your photo
